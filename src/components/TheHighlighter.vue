@@ -11,7 +11,7 @@ const paragraphs = computed(() => {
 });
 const currentPage = ref(0);
 
-onMounted(async () => {
+async function refresh() {
     loading.value = true;
     try {
         textData.value = await (await fetch('data.json')).json();
@@ -20,22 +20,11 @@ onMounted(async () => {
     } finally {
         loading.value = false;
     }
+}
+
+onMounted(() => {
+    refresh();
 })
-
-function saveSelection(e) {
-    localStorage.setItem(e.paragraphId, e.value)
-}
-
-function getParagraphFromStorage(id) {
-    const paragraphFromStorage = localStorage.getItem(id);
-    if (paragraphFromStorage) {
-        return {
-            id,
-            text: paragraphFromStorage
-        }
-    }
-    return null;
-}
 
 </script>
 
@@ -49,8 +38,8 @@ function getParagraphFromStorage(id) {
                 @click="() => currentPage++">Next
                 Page</button>
         </div>
-        <SingleParagraph v-for="paragraph in paragraphs" :key="paragraph.id"
-            :paragraph="getParagraphFromStorage(paragraph.id) || paragraph" @saveSelection="saveSelection" />
+        <SingleParagraph v-for="paragraph in paragraphs" :key="paragraph.id" :paragraph="paragraph"
+            @highlighSaved="refresh()" />
     </div>
 </template>
 
