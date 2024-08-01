@@ -22,6 +22,6 @@ main {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 2em 20em;
+  padding: 2em 10em;
 }
 </style>
